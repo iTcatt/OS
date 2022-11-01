@@ -1,3 +1,1 @@
-# OS
-## Operating Systems
-## System Programming
+# Operating Systems
