@@ -7,7 +7,7 @@
 
 class Configuration {
     public:
-        std::string id;
+        int id;
         std::string name;
         std::string path;
         

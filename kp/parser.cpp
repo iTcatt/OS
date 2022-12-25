@@ -21,8 +21,7 @@ vector<Configuration> iniParser(string nameFile) {
         if (line[0] == '[') {
             continue;
         } else if (line.substr(0, 2) == "id") {
-            currentConfig.id = line.substr(5, line.size() - 5);
-            cout << currentConfig.id <<'\n';
+            currentConfig.id = stoi(line.substr(5, line.size() - 5));
         } else if (line.substr(0, 4) == "name") {
             currentConfig.name = line.substr(8, line.size() - 9);
         } else if (line.substr(0, 4) == "path") {
