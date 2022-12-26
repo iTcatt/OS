@@ -8,11 +8,11 @@
 class Configuration {
     public:
         int id;
-        std::string name;
+        int parent;
         std::string path;
         
         void printConfiguration() {
-            std::cout << id << '\n' << name << '\n' << path <<"\n\n";
+            std::cout << id << '\n' << parent << '\n' << path <<"\n\n";
         }
 };
 
