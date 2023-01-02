@@ -8,13 +8,14 @@
 class Configuration {
     public:
         int id;
-        int parent;
+        std::vector<int> parents;
         std::string path;
         
         void printConfiguration() {
-            std::cout << id << '\n' << parent << '\n' << path <<"\n\n";
+            for (int i = 0; i < parents.size(); ++i)
+                std::cout << id << '\n' << parents[i] << '\n' << path <<"\n\n";
         }
 };
 
-std::vector<Configuration> iniParser(std::string);
+std::vector<Configuration> IniParser(std::string);
 #endif
