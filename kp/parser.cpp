@@ -26,7 +26,7 @@ vector<Configuration> IniParser(string nameFile) {
         } else if (line.substr(0, 6) == "parent") {
             currentConfig.parents.push_back(stoi(line.substr(9, line.size() - 9)));
         } else if (line.substr(0, 4) == "path") {
-            currentConfig.path = line.substr(8, line.size() - 9);
+            currentConfig.path = line.substr(8, line.size() - 10);
         } else {
             configs.push_back(currentConfig);
             currentConfig.parents.clear();
