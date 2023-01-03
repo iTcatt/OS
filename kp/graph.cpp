@@ -10,25 +10,25 @@ Graph CreateGraph(vector<Configuration> configs) {
     for (auto config: configs) {
         for (auto parent: config.parents) {
             if (parent == 0) {
-                graph.endJobID = config.id;
+                graph.end_jobs_id.push_back(config.id);
             }
             graph.addNode(parent, config.id);
         }
     }
 
-    if (graph.endJobID == 0) {
+    if (graph.end_jobs_id.empty()) {
         cout << "Graph doesn't have End Jobs\n";
         exit(1);
     }
     return graph;
 }
 
-int IsCycle(int vertex, Graph &graph, vector<int> &visited, int parent) {
+int IsCycle(int vertex, Graph &graph, vector<int> &visited) {
 	visited[vertex] = 1;
     int result = 0;
 	for (auto neighbor: graph.adjacency[vertex]) {
 		if (visited[neighbor] == 0) {
-			result = IsCycle(neighbor, graph, visited, vertex);
+			result = IsCycle(neighbor, graph, visited);
             if (result) {
                 break;
             }
@@ -42,21 +42,23 @@ int IsCycle(int vertex, Graph &graph, vector<int> &visited, int parent) {
     return result;
 }
 
-vector<int> BFS (int u, Graph &graph, vector<int> &visited) {
-    vector<int> path;
-    queue<int> q;
-    q.push(u);
-    while (!q.empty()) {
-        u = q.front();
-        q.pop();
-        path.push_back(u);
-        for (int v : graph.adjacency[u]) {
-            if (visited[v] == 0) {
-                q.push(v);
-                visited[v] = 1;
+vector<int> BFS(Graph &graph, vector<int> &visited) {
+    vector<int> path;   
+    queue<int> line;
+    int current_vertex;
+    for (auto id: graph.end_jobs_id) {
+        line.push(id);
+    }
+    while (!line.empty()) {
+        current_vertex = line.front();
+        line.pop();
+        path.push_back(current_vertex);
+        for (int neighbor : graph.adjacency[current_vertex]) {
+            if (visited[neighbor] == 0) {
+                line.push(neighbor);
+                visited[neighbor] = 1;
             }
         }
-        
     }
     return path;
 }

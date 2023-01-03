@@ -7,12 +7,12 @@
 
 class Graph {
 public:
-    int graphSize = 0;
-    int endJobID = 0;
+    int graph_size = 0;
+    std::vector<int> end_jobs_id;
     std::vector<std::vector<int>> adjacency;
 
     Graph(int size) {
-        graphSize = size;
+        graph_size = size;
         adjacency.resize(size);
     }
     void addNode(int startNode, int endNode) {
@@ -20,15 +20,15 @@ public:
     }
 
     int getSize() {
-        return graphSize;
+        return graph_size;
     }
 
     int isEmpty() {
-        return graphSize == 0;
+        return graph_size == 0;
     }
 
     void print() { 
-        for (int startNode = 1; startNode < graphSize; ++startNode) {
+        for (int startNode = 1; startNode < graph_size; ++startNode) {
             for (int vertex: adjacency[startNode]) {
                 std::cout << startNode << ' ' << vertex << "\n";
             }
@@ -37,7 +37,7 @@ public:
 };
 
 Graph CreateGraph(std::vector<Configuration>);
-std::vector<int> BFS(int, Graph &, std::vector<int> &);
-int IsCycle(int, Graph &, std::vector<int> &, int);
+std::vector<int> BFS(Graph &, std::vector<int> &);
+int IsCycle(int, Graph &, std::vector<int> &);
 
 #endif
