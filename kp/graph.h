@@ -38,6 +38,6 @@ public:
 
 Graph CreateGraph(std::vector<Configuration>);
 std::vector<int> BFS(int, Graph &, std::vector<int> &);
-void IsCycle(int, Graph &, std::vector<int> &, int);
+int IsCycle(int, Graph &, std::vector<int> &, int);
 
 #endif
