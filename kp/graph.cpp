@@ -23,19 +23,19 @@ Graph CreateGraph(vector<Configuration> configs) {
     return graph;
 }
 
-int IsCycle(int vertex, Graph &graph, vector<int> &visited, int parent) {
-	visited[vertex] = true;
-    int result;
+void IsCycle(int vertex, Graph &graph, vector<int> &visited, int parent) {
+	visited[vertex] = 1;
+    
 	for (auto neighbor: graph.adjacency[vertex]) {
-		if (!visited[neighbor])
-			result = IsCycle(neighbor, graph, visited, vertex);
-		else if(neighbor != parent) {
-            result = 1;
-		} else {
-            result = 0;
+		if (!visited[neighbor]) {
+			IsCycle(neighbor, graph, visited, vertex);
         }
+		else if (visited[neighbor] == 1) {
+			cout << "Graph has a cycle!\n";
+            exit(2);
+		}
 	}
-    return result;
+    visited[vertex] = 2;
 }
 
 vector<int> BFS (int u, Graph &graph, vector<int> &visited) {
