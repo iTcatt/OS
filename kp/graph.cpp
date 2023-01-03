@@ -1,47 +1,56 @@
 #include <queue>
 #include "parser.h"
 #include "graph.h"
+#include <vector>
 
 using namespace std;
 
-vector<int> BFS(int graphSize, vector<int> adj[]) {
-    vector<int> bfs_traversal;
-    vector<int> visited(graphSize, 0);
-    for (int i = 0; i < graphSize; ++i) {
-        if (!visited[i]) {
-            queue<int> q;
-            visited[i] = 1;
-            q.push(i);
-            
-            while (!q.empty()) {
-                int g_node = q.front();
-                q.pop();
-                bfs_traversal.push_back(g_node);
-                for (auto it : adj[g_node]) {
-                    if (!visited[it]) {
-                        visited[it] = 1;
-                        q.push(it);
-                    }
-                }
-            }
-        }
-    }
-    return bfs_traversal;
-}
-
-Graph createGraph(vector<Configuration> configs) {
+Graph CreateGraph(vector<Configuration> configs) {
     Graph graph(configs.size() + 1);
-    int endJob = 0; // хранит конечную job'у
     for (auto config: configs) {
-        if (endJob != 0) {
-            cout << "Error: Wrong configuration! Too many finish jobs.\n";
-            exit(2);
+        for (auto parent: config.parents) {
+            if (parent == 0) {
+                graph.endJobID = config.id;
+            }
+            graph.addNode(parent, config.id);
         }
-        if (config.parent == 0) {
-            endJob  =config.id;
-        }
-        graph.addNode(config.parent, config.id);
     }
-    cout << "End job is " << endJob << '\n';
+
+    if (graph.endJobID == 0) {
+        cout << "Graph doesn't have End Jobs\n";
+        exit(1);
+    }
     return graph;
 }
+
+void IsCycle(int vertex, Graph &graph, vector<int> &visited, int parent) {
+	visited[vertex] = true;
+	for (auto neighbor: graph.adjacency[vertex]) {
+		if (!visited[neighbor])
+			IsCycle(neighbor, graph, visited, vertex);
+		else if(neighbor != parent) {
+			cout << "Grath has a cycle!\n";
+			exit(0);
+		}
+	}
+}
+
+vector<int> BFS (int u, Graph &graph, vector<int> &visited) {
+    vector<int> path;
+    queue<int> q;
+    q.push(u);
+    while (!q.empty()) {
+        u = q.front();
+        q.pop();
+        path.push_back(u);
+        for (int v : graph.adjacency[u]) {
+            if (visited[v] == 0) {
+                q.push(v);
+                visited[v] = 1;
+            }
+        }
+        
+    }
+    return path;
+}
+
