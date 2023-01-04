@@ -4,8 +4,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define P_READ 0
-#define P_WRITE 1
+const int READ = 0;
+const int WRITE = 1;
 
 
 int main() {
@@ -17,18 +17,18 @@ int main() {
         printf("Pipe was not created\n");
         return 1;
     }
-
-    switch (fork()) {
+    pid_t process_id;
+    switch (process_id = fork()) {
         case -1: //error
             printf("Error: Fork\n");
             return 2;
         
         case 0: //child
-            close(file_descriptors[P_WRITE]);
-            read(file_descriptors[P_READ], file_name, sizeof(file_name));
-            char* path = "/mnt/d/ВУЗ/second/OS/Labs/lab2/./child";
+            close(file_descriptors[WRITE]);
+            read(file_descriptors[READ], file_name, sizeof(file_name));
+            char* path = "./child";
             
-            if (dup2(file_descriptors[P_READ], 0) == - 1) {
+            if (dup2(file_descriptors[READ], 0) == -1) {
                 printf("Error: Dup2\n");
                 return 3;
             }
@@ -37,20 +37,20 @@ int main() {
             break;
 
         default: //parent
-            close(file_descriptors[P_READ]);
+            close(file_descriptors[READ]);
             printf("Enter filename: ");
             scanf("%s", file);
-            write(file_descriptors[P_WRITE], file, sizeof(file));
+            write(file_descriptors[WRITE], file, sizeof(file));
             printf("Enter float numbers: ");
             float number;
             while (scanf("%f", &number)) {
-                if ((write(file_descriptors[P_WRITE], &number, sizeof(float))) == -1) {
+                if ((write(file_descriptors[WRITE], &number, sizeof(float))) == -1) {
                     printf("Error: Write to pipe\n");
                     return 4;
                 }
             }
 
-            close(file_descriptors[P_WRITE]);
+            close(file_descriptors[WRITE]);
             wait(NULL);
             break;
     }
