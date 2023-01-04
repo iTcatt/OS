@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <map>
 #include <vector>
 #include <string>
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]) {
         exit(2);
     }
 
-    dag_jobs.print();
+    // dag_jobs.print();
 
     vector<int> visited(dag_jobs.getSize(), 0);
 
@@ -47,13 +48,13 @@ int main(int argc, char* argv[]) {
     vector<int> path = BFS(dag_jobs, traveled);
 
     map<int, string> job_paths = CreateDictionary(configs);
-    cout << '\n';
 
-    // for (auto id: path) {
-    //     cout << id << ' ';
-    // }
-    // cout << '\n';
-    int number = 1;
+    int string_size = path.size() + 1;
+    char state[string_size];
+    for (int i = 0; i < string_size; ++i) {
+        state[i] = '0';
+    }
+
     for (int id = path.size() - 1; id >= 0; --id) {
         int pipe_parent[2];
         int pipe_child[2];
@@ -66,7 +67,6 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "Pipe Failed");
             exit(1);
         }
-        cout << "Ha " << path[id] << '\n';
         pid_t process_id = fork();
         
         if (process_id < 0) {
@@ -76,12 +76,12 @@ int main(int argc, char* argv[]) {
 
         if (process_id > 0) {
             close(pipe_parent[0]);
-            write(pipe_parent[1], &number, sizeof(int));
+            write(pipe_parent[1], state, sizeof(char) * (string_size + 1));
             close(pipe_parent[1]);
             wait(NULL);
             
             close(pipe_child[1]);
-            read(pipe_child[0], &number, sizeof(int));
+            read(pipe_child[0], state, sizeof(char) * (string_size + 1));
             close(pipe_child[0]);
             
         } else {
@@ -91,17 +91,24 @@ int main(int argc, char* argv[]) {
                 printf("Error: Dup2\n");
                 exit(2);
             }
-
-            int received;
-            read(pipe_parent[0], &received, sizeof(int));
+            char received[string_size];
+            read(pipe_parent[0], received, sizeof(char) * (string_size + 1));
             close(pipe_parent[0]);
             
             close(pipe_child[0]);
-            char str[2];
-            sprintf(str, "%d", received);
-            execl(job_paths[path[id]].c_str(), job_paths[path[id]].c_str(), str, NULL);
+            string adjacency;
+            for (int i = 0; i < dag_jobs.adjacency[path[id]].size(); ++i) {
+                adjacency.push_back(dag_jobs.adjacency[path[id]][i] + '0');
+            }
+            char ID[2];
+            sprintf(ID, "%d", path[id]);
+            execl(job_paths[path[id]].c_str(), job_paths[path[id]].c_str(), ID, received, adjacency.c_str(), NULL);
         }
-        cout << number << '\n';
     }
+
+    for (int id = 1; id < dag_jobs.getSize(); ++id) {
+        cout << "Result for job_id_" << id << " is " << state[id] << '\n';
+    }
+
     return 0;
 }
