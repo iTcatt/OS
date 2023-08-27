@@ -8,7 +8,7 @@
 void print_menu() {
     printf("Menu:\n");
     printf("\t1. create <ID> -- create a compute node\n");
-    printf("\t2. exec <ID> <KEY> optional <VALUE> -- if  \n");
+    printf("\t2. exec <ID> <KEY> optional <VALUE> -- if there is no value, the value by key will be obtained, otherwise the value <VALUE> will be stored by key <KEY>\n");
     printf("\t3. print <ID> -- prints the contents of the compute node dictionary\n");
     printf("\t4. ping <ID> -- checking if a local dictionary has been created on the compute node\n");
     printf("\t5. pingall -- ping command is executed for all compute nodes\n");
