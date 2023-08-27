@@ -1,6 +1,15 @@
-all: 
-	gcc parent.c -o parent
-	gcc child.c -o child
+all: build
+
+build: parent child
+
+parent: parent.o
+	gcc $^ -o $@
+
+child: child.o
+	gcc $^ -o $@
+
+%.o: %.c 
+	gcc -c $^ -o $@
 
 clean: 
-	rm parent child
+	rm parent child *.o

@@ -4,8 +4,7 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    FILE *outfile = fopen(argv[1], "w");
-
+    FILE* outfile = fopen(argv[1], "w");
     if (outfile == NULL) {
         printf("The file was not opened\n");
         return 1;
@@ -13,13 +12,12 @@ int main(int argc, char* argv[]) {
 
     float sum = 0.;
     float number;
-    while (read(0, &number, sizeof(float))) {
+    while (read(0, &number, sizeof(float)) > 0) {
         sum += number;
     }
-
+    
     fprintf(outfile, "Sum of numbers: %f\n", sum);
     fclose(outfile);
     printf("Child program finish\n");
-
     return 0;
 }
