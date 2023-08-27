@@ -1,10 +1,12 @@
 CC = gcc
 
+all: main
+
 main: main.o
-	$(CC) main.o -lpthread -o main
+	$(CC) $^ -lpthread -o $@
 
 main.o: main.c 
-	$(CC) -c main.c
+	$(CC) -c $^ -o $@
 
 clean:
 	rm main *.o 
