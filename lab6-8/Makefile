@@ -41,6 +41,8 @@ map_test: storage/list/list.c storage/map.c storage/map_test.c
 tree_test: topology/bst_test.c topology/bst.c
 	$(CC) -g $^ -o topology/$@
 
+test: map_test tree_test list_test
+
 run: clean build
 	./control
 
